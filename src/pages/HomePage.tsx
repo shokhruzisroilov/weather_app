@@ -1,133 +1,118 @@
-import { useState } from 'react'
-import {
-	FaTemperatureHigh,
-	FaTint,
-	FaWind,
-	FaSearch,
-	FaCloudSun,
-} from 'react-icons/fa'
+import { useEffect, useState } from 'react'
 import { useWeather } from '../hooks/useWeather'
-import { fetchForecast } from '../api/weatherApi'
-import { useQuery } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { useForecast } from '../hooks/useForecast'
+import { SearchBar } from '../components/search/SearchBar'
+import { WeatherCard } from '../components/weather/WeatherCard'
+import { ForecastCard } from '../components/forecasts/ForecastCard'
+import { Loader } from '../components/common/Loader'
+import { formatDateUz } from '../utils/formatDateUz'
+import { getBackgroundImage } from '../utils/getBackgroundImage'
+import { ThemeSwitcher } from '../components/theme/ThemeSwitcher'
 
 export const HomePage = () => {
-	const [city, setCity] = useState('Tashkent')
+	const [city, setCity] = useState('Toshkent')
+	const [input, setInput] = useState('')
+	const [backgroundImage, setBackgroundImage] = useState('/images/default.jpg')
 
 	const { data: weatherData, isLoading, isError } = useWeather(city)
-	const { data: forecastData } = useQuery({
-		queryKey: ['forecast', city],
-		queryFn: () => fetchForecast(city),
-	})
+	const { data: forecastData } = useForecast(city)
 
-	const [input, setInput] = useState('')
+	useEffect(() => {
+		if (weatherData?.weather?.[0]?.description) {
+			const bg = getBackgroundImage(weatherData.weather[0].description)
+			setBackgroundImage(bg)
+		}
+	}, [weatherData])
 
 	const handleSearch = () => {
-		if (input.trim() !== '') {
-			setCity(input)
+		if (input.trim()) {
+			setCity(input.trim())
 		}
 	}
 
-	return (
-		<main className='min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 p-6 text-gray-800 dark:text-gray-100'>
-			<div className='max-w-2xl mx-auto text-center space-y-6'>
-				<h1 className='text-4xl font-bold text-primary'>Ob-havo ilovasi</h1>
+	const filteredForecast = forecastData?.list?.filter((item: any) =>
+		item.dt_txt.includes('12:00:00')
+	)
 
-				{/* Search */}
-				<div className='flex gap-3 items-center justify-center'>
-					<input
-						type='text'
-						placeholder='Shahar nomi...'
+	return (
+		<main
+			className='min-h-screen bg-cover bg-bottom bg-no-repeat transition-all duration-500 relative'
+			style={{ backgroundImage: `url(${backgroundImage})` }}
+		>
+			{/* Theme Switcher in top-right corner */}
+			<div className='absolute top-5 right-5 z-50'>
+				<ThemeSwitcher />
+			</div>
+
+			<div className='min-h-screen bg-gradient-to-br from-white/80 to-slate-100/80 dark:from-black/80 dark:to-zinc-900/80 px-4 py-8 flex flex-col items-center justify-between'>
+				<div className='w-full max-w-5xl space-y-10 text-center'>
+					{/* Header */}
+					<h1 className='text-4xl font-extrabold text-primary dark:text-primary-light drop-shadow mb-6'>
+						🌤 Ob-havo ma'lumotlari
+					</h1>
+
+					{/* Search */}
+					<SearchBar
 						value={input}
-						onChange={e => setInput(e.target.value)}
-						onKeyDown={e => e.key === 'Enter' && handleSearch()}
-						className='w-full sm:w-64 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary'
+						onChange={setInput}
+						onSearch={handleSearch}
 					/>
-					<button
-						onClick={handleSearch}
-						className='flex items-center gap-2 bg-primary hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all shadow-md'
-					>
-						<FaSearch />
-						Qidirish
-					</button>
+
+					{/* Weather Card */}
+					<div className='mt-6'>
+						{isLoading ? (
+							<Loader />
+						) : isError || weatherData?.cod === '404' ? (
+							<p className='text-red-500 text-lg font-medium text-center'>
+								❌ Shahar topilmadi yoki xatolik yuz berdi!
+							</p>
+						) : (
+							weatherData && (
+								<WeatherCard
+									city={weatherData.name}
+									temp={Math.round(weatherData.main.temp)}
+									humidity={weatherData.main.humidity}
+									wind={weatherData.wind.speed}
+									description={weatherData.weather[0].description}
+								/>
+							)
+						)}
+					</div>
+
+					{/* Forecast Cards */}
+					{filteredForecast && filteredForecast.length > 0 && (
+						<div className='mt-12 text-center'>
+							<h3 className='text-2xl font-semibold mb-6 text-slate-800 dark:text-slate-200'>
+								📅 5 kunlik prognoz (soat 12:00)
+							</h3>
+							<div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+								{filteredForecast.map((day: any, i: number) => (
+									<ForecastCard
+										key={i}
+										index={i}
+										date={formatDateUz(day.dt_txt)}
+										temp={Math.round(day.main.temp)}
+										description={day.weather[0].description}
+									/>
+								))}
+							</div>
+						</div>
+					)}
 				</div>
 
-				{/* Weather Card */}
-				{isLoading ? (
-					<p>Yuklanmoqda...</p>
-				) : isError || !weatherData ? (
-					<p className='text-red-500'>Xatolik yuz berdi!</p>
-				) : (
-					<div className='bg-gradient-to-br from-primary to-sky-700 text-white p-6 rounded-2xl shadow-xl'>
-						<h2 className='text-2xl font-semibold mb-4'>{weatherData.name}</h2>
-
-						<div className='flex items-center gap-3 mb-3'>
-							<FaTemperatureHigh className='text-xl' />
-							<p className='text-lg'>
-								Harorat:{' '}
-								<span className='font-medium'>{weatherData.main.temp}°C</span>
-							</p>
-						</div>
-
-						<div className='flex items-center gap-3 mb-3'>
-							<FaTint className='text-xl' />
-							<p className='text-lg'>
-								Namlik:{' '}
-								<span className='font-medium'>
-									{weatherData.main.humidity}%
-								</span>
-							</p>
-						</div>
-
-						<div className='flex items-center gap-3'>
-							<FaWind className='text-xl' />
-							<p className='text-lg'>
-								Shamol:{' '}
-								<span className='font-medium'>
-									{weatherData.wind.speed} m/s
-								</span>
-							</p>
-						</div>
-					</div>
-				)}
-
-				{/* Forecast Cards */}
-				{forecastData && (
-					<>
-						<h3 className='text-xl font-semibold mt-8 mb-4'>
-							5 kunlik prognoz
-						</h3>
-						<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-							{forecastData.list.slice(0, 6).map((day: any, i: number) => (
-								<motion.div
-									key={i}
-									className='bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md'
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ delay: i * 0.1 }}
-								>
-									<p className='font-medium mb-2 text-gray-700 dark:text-gray-200'>
-										{new Date(day.dt_txt).toLocaleDateString('uz-UZ', {
-											weekday: 'long',
-											month: 'short',
-											day: 'numeric',
-										})}
-									</p>
-									<div className='flex items-center gap-2 mb-1'>
-										<FaTemperatureHigh />
-										<p>
-											Harorat: <strong>{Math.round(day.main.temp)}°C</strong>
-										</p>
-									</div>
-									<div className='flex items-center gap-2 text-sm'>
-										<FaCloudSun />
-										<p className='capitalize'>{day.weather[0].description}</p>
-									</div>
-								</motion.div>
-							))}
-						</div>
-					</>
-				)}
+				{/* Footer */}
+				<footer className='text-sm text-gray-600 dark:text-gray-400 text-center mt-12 pb-4'>
+					© 2025 <span className='font-semibold'>Ob-havo ilovasi</span> |
+					Developed by{' '}
+					<a
+						href='https://t.me/yourTelegram'
+						target='_blank'
+						rel='noopener noreferrer'
+						className='text-primary hover:underline'
+					>
+						Shohruz Isroilov
+					</a>
+				</footer>
 			</div>
 		</main>
 	)

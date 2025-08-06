@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchWeather } from '../api/weatherApi'
+import { getWeather } from '../services/weatherService'
 
 export const useWeather = (city: string) => {
 	return useQuery({
 		queryKey: ['weather', city],
-		queryFn: () => fetchWeather(city),
+		queryFn: () => getWeather(city),
 		enabled: !!city,
 	})
 }
