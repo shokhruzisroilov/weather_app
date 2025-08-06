@@ -40,7 +40,7 @@ src/
 
    ```bash
    git clone <repository-url>
-   cd weather-forecast-app
+   cd weather_app
    ```
 
 2. Paketlarni o‘rnating:
@@ -49,13 +49,7 @@ src/
    npm install
    ```
 
-3. `.env` fayl yarating va quyidagicha API kalitini kiriting:
-
-   ```
-   VITE_WEATHER_API_KEY=your_openweathermap_api_key
-   ```
-
-4. Ilovani lokal serverda ishga tushuring:
+3. Ilovani lokal serverda ishga tushuring:
    ```bash
    npm run dev
    ```
