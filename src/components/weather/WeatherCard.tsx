@@ -36,7 +36,7 @@ const getWeatherIcon = (desc: string) => {
 	)
 		return <FaSmog className='text-4xl text-gray-300' />
 
-	return <FaCloudSun className='text-4xl text-white' /> // default
+	return <FaCloudSun className='text-4xl text-white' />
 }
 
 export const WeatherCard = ({
@@ -55,6 +55,7 @@ export const WeatherCard = ({
 			className='w-full max-w-sm mx-auto p-6 rounded-2xl shadow-lg bg-gradient-to-br from-sky-500 to-blue-700 dark:from-gray-800 dark:to-gray-900 text-white transition-all duration-300'
 			role='region'
 			aria-label={`Joriy ob-havo: ${city}`}
+			data-testid='weather-card'
 		>
 			<div className='flex items-center justify-between mb-6'>
 				<h2 className='text-2xl font-bold'>{city}</h2>
@@ -64,21 +65,21 @@ export const WeatherCard = ({
 			<div className='space-y-4'>
 				<div className='flex items-center gap-3'>
 					<FaTemperatureHigh className='text-xl text-yellow-300' />
-					<p className='text-lg'>
+					<p className='text-lg' data-testid='temperature'>
 						Harorat: <span className='font-bold'>{temp}°C</span>
 					</p>
 				</div>
 
 				<div className='flex items-center gap-3'>
 					<FaTint className='text-xl text-blue-200' />
-					<p className='text-lg'>
+					<p className='text-lg' data-testid='humidity'>
 						Namlik: <span className='font-bold'>{humidity}%</span>
 					</p>
 				</div>
 
 				<div className='flex items-center gap-3'>
 					<FaWind className='text-xl text-green-200' />
-					<p className='text-lg'>
+					<p className='text-lg' data-testid='wind'>
 						Shamol: <span className='font-bold'>{wind} m/s</span>
 					</p>
 				</div>

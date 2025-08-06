@@ -24,6 +24,7 @@ export const ForecastCard = ({
 			transition={{ delay: index * 0.1, type: 'spring', stiffness: 70 }}
 			role='region'
 			aria-label={`Prognoz: ${date}`}
+			data-testid={`forecast-card-${index}`}
 		>
 			<h3 className='font-semibold text-lg text-primary dark:text-sky-400 text-center'>
 				{date}

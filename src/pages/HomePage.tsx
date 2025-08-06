@@ -105,7 +105,7 @@ export const HomePage = () => {
 					© 2025 <span className='font-semibold'>Ob-havo ilovasi</span> |
 					Developed by{' '}
 					<a
-						href='https://t.me/yourTelegram'
+						href='https://t.me/shohruz_isroilov'
 						target='_blank'
 						rel='noopener noreferrer'
 						className='text-primary hover:underline'

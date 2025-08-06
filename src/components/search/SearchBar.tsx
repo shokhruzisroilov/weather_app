@@ -24,6 +24,7 @@ export const SearchBar = ({ value, onChange, onSearch }: SearchBarProps) => {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 			className='w-full max-w-2xl mx-auto px-4 sm:px-0'
+			data-testid='search-bar'
 		>
 			<motion.div
 				className='flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-300 dark:border-gray-600'

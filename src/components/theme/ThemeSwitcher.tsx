@@ -15,6 +15,7 @@ export const ThemeSwitcher = () => {
 			whileHover={{ scale: 1.05 }}
 			className='flex items-center gap-2 bg-primary/10 dark:bg-primary/20 border border-primary/30 text-primary dark:text-white px-3 py-2 rounded-full shadow hover:bg-primary/20 dark:hover:bg-primary/30 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200'
 			aria-label='Mavzuni almashtirish'
+			data-testid='theme-switcher'
 		>
 			<span className='text-xl'>
 				{theme === 'light' ? <FaMoon /> : <FaSun />}
