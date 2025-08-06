@@ -1,19 +1,71 @@
 # 🌤️ Weather Forecast App
 
-Bu loyiha OpenWeatherMap API asosida qurilgan ob-havo prognozlari ilovasi.
+Ushbu loyiha OpenWeatherMap API asosida qurilgan va foydalanuvchiga real vaqtda ob-havo prognozlarini taqdim etadi. Ilova `dark` va `light` rejimlarni qo‘llab-quvvatlaydi.
 
-## 🔧 Texnologiyalar:
+## 🔧 Texnologiyalar
 
-- React
-- @tanstack/react-query
-- axios
-- TailwindCSS, shadcn/ui
-- framer-motion
-- FSD arxitektura
+- **React** – foydalanuvchi interfeysi uchun
+- **@tanstack/react-query** – ma’lumotlarni kechiktirilgan holatda boshqarish
+- **Axios** – API so‘rovlarini yuborish uchun
+- **Tailwind CSS** – tez va moslashuvchan dizayn uchun
+- **Redux Toolkit** – holatni boshqarish (tema boshqaruvi uchun)
+- **Framer Motion** – interfeysga animatsiyalar qo‘shish
+- **Vitest** – test yozish va ishga tushirish uchun
 
-## 🚀 Run qilish:
+## 🎨 Tema boshqaruvi
+
+Ilovada **light** va **dark** rejimlarni Redux Toolkit yordamida boshqarish yo‘lga qo‘yilgan. Tanlangan tema `localStorage` orqali saqlanadi va keyingi foydalanishda avtomatik qo‘llaniladi.
+
+## 📁 Loyihaviy tuzilma
+
+```
+src/
+├── components/        # UI komponentlari
+├── hooks/             # Maxsus hooklar
+├── pages/             # Sahifalar
+├── providers/         # Kontekst va Providerlar
+├── redux/             # Redux slice va store
+│   └── theme/         # Tema slice
+├── router/            # Routing
+├── services/          # API chaqiruvlar
+├── utils/             # Yordamchi funksiyalar
+├── __tests__/         # Vitest test fayllari
+├── App.tsx
+├── main.tsx
+```
+
+## 🚀 Ishga tushirish
+
+1. Loyihani klonlang:
+
+   ```bash
+   git clone <repository-url>
+   cd weather-forecast-app
+   ```
+
+2. Paketlarni o‘rnating:
+
+   ```bash
+   npm install
+   ```
+
+3. `.env` fayl yarating va quyidagicha API kalitini kiriting:
+
+   ```
+   VITE_WEATHER_API_KEY=your_openweathermap_api_key
+   ```
+
+4. Ilovani lokal serverda ishga tushuring:
+   ```bash
+   npm run dev
+   ```
+
+## 🧪 Testlash (Vitest)
+
+Testlarni ishga tushirish uchun quyidagilarni bajarish kifoya:
 
 ```bash
-npm install
-npm run dev
+npm run test
 ```
+
+Test fayllari `__tests__/` papkasida joylashgan va `*.test.tsx` shaklida yozilgan.
